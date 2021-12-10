@@ -4,6 +4,7 @@ import "./register.css";
 import axios from "axios";
 import {Link} from "react-router-dom";
 
+
 export default function Register() {
     const username = useRef();
     const email = useRef();
@@ -33,15 +34,15 @@ export default function Register() {
             <div className="loginWrapper">
                 <div className="loginLeft">
                     <h3 className="loginLogo">FFL</h3>
-                    <span className="loginDesc">connect to your</span>
+                    <span className="loginDesc">Welcome Back</span>
                 </div>
                 <div className="loginRight">
-                    <form className="loginBox" onSubmit={handleClick}>
-                        <input placeholder="Username" required ref={username} className="loginInput" />
-                        <input placeholder="Email" required ref={email} type="email"className="loginInput" />
-                        <input placeholder="password" required ref={password} minLength="6" type="password"className="loginInput" />
-                        <input placeholder="password Again" required ref={passwordAgain} minLength="6" type="password" className="loginInput" />
-                        <button className="loginButton" type="submit">sign up</button>
+                    <form className="registerBox" onSubmit={handleClick}>
+                        <input placeholder="Username" required ref={username} className="registerInput" />
+                        <input placeholder="Email" required ref={email} type="email"className="registerInput" />
+                        <input placeholder="Password" required ref={password} minLength="6" type="password"className="registerInput" />
+                        <input placeholder="Comfirm Password" required ref={passwordAgain} minLength="6" type="password" className="registerInput" />
+                        <button className="submitSignUp" type="submit">sign up</button>
                         <Link to = "/login">
                         <button className="loginRegisterButton">Log into account</button>
                         </Link>

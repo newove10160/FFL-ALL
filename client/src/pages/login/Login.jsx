@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef , useState } from "react";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.css"
@@ -20,7 +20,7 @@ export default function Login() {
             <div className="loginWrapper">
                 <div className="loginLeft">
                     <h3 className="loginLogo">FFL</h3>
-                    <span className="loginDesc">connect to your</span>
+                    <span className="loginDesc">Welcome Back</span>
                 </div>
                 <div className="loginRight">
                     <form className="loginBox" onSubmit={handleClick}>
@@ -33,13 +33,14 @@ export default function Login() {
                         <button 
                         className="loginButton">{isFetching ? "loading": "Login"}
                         </button>
-                        <span 
-                        className="loginForgot">Forgot password?
-                        </span>
+                       
                         <Link to = "/register">
                         <button 
                         className="loginRegisterButton">Create your Account
                         </button>
+                        <span
+                        className="forgot">Forgot password?
+                        </span>
                         </Link>
                     </form>
                 </div>

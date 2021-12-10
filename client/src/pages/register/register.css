@@ -28,7 +28,7 @@
 .loginDesc{
     font-size: 24px;
 }
-.loginBox{
+.registerBox{
     height: 400px;
     padding: 20px;
     background-color: white;
@@ -37,17 +37,17 @@
     flex-direction: column;
     justify-content: space-between;
 }
-.loginInput{
+.registerInput{
     height: 50px;
     border-radius: 10px;
     border: 1px solid gray;
     font-size: 18px;
     padding-left: 10px;
 }
-.loginInput:focus{
+.registerInput:focus{
     outline: none;
 }
-.loginButton{
+.submitSignUp{
     height: 50px;
     border-radius: 10px;
     border: none;
@@ -63,7 +63,7 @@
 }
 
 .loginRegisterButton{
-    width: 70%;
+    width: 100%;
     height: 50px;
     border-radius: 10px;
     border: none;
