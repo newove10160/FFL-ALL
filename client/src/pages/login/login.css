@@ -33,9 +33,11 @@
     padding: 20px;
     background-color: white;
     border-radius: 10px;
+    text-shadow: 5px 10px #888888;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    /* opacity: 0.8; */
 }
 .loginInput{
     height: 50px;
@@ -54,7 +56,7 @@
     background-color: green;
     color: white;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 500; 
 }
 .forgot{

@@ -42,9 +42,9 @@ export default function Register() {
                         <input placeholder="Email" required ref={email} type="email"className="registerInput" />
                         <input placeholder="Password" required ref={password} minLength="6" type="password"className="registerInput" />
                         <input placeholder="Comfirm Password" required ref={passwordAgain} minLength="6" type="password" className="registerInput" />
-                        <button className="submitSignUp" type="submit">sign up</button>
+                        <button className="submitSignUp" type="submit">Sign up</button>
                         <Link to = "/login">
-                        <button className="loginRegisterButton">Log into account</button>
+                        <button className="loginRegisterButton">Back to Login</button>
                         </Link>
                     </form>
                 </div>
