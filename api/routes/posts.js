@@ -95,4 +95,53 @@ router.get("/profile/:username", async(req,res)=>{
         res.status(500).json(error);
     }
 });
+
+
+//Get timeline's post by page
+router.get("/timeline/:userId/page/:pageNo/size/:pageSize", async (req, res) => {
+    let { userId, pageNo, pageSize } = req.params;
+    pageNo = parseInt(pageNo);
+    pageSize = parseInt(pageSize);
+    if (pageNo <= 0) {
+        pageNo = 1
+    }
+    if (pageSize <= 0) {
+        pageSize = 10
+    }
+    try {
+        const foundPage = await Post.find()
+            .sort({ createdAt: 'desc' })
+            .skip(pageSize * (pageNo - 1))
+            .limit(pageSize)
+        res.status(200).json(foundPage)
+    }
+    catch (err) {
+        res.status(409).json({ message: err.message });
+    }
+})
+
+//Get user's post by page
+router.get("/profile/:username/page/:pageNo/size/:pageSize", async(req,res)=>{
+    let { username, pageNo, pageSize } = req.params;
+    pageNo = parseInt(pageNo);
+    pageSize = parseInt(pageSize);
+    if (pageNo <= 0) {
+        pageNo = 1
+    }
+    if (pageSize <= 0) {
+        pageSize = 10
+    }
+    try {
+        const user = await User.findOne({ username: username });
+        const foundPage = await Post.find({ userId: user._id })
+            .sort({ createdAt: 'desc' })
+            .skip(pageSize * (pageNo - 1))
+            .limit(pageSize)
+        res.status(200).json(foundPage)
+    }
+    catch (err) {
+        res.status(409).json({ message: err.message });
+    }
+});
+
 module.exports = router;
