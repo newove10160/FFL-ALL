@@ -13,6 +13,8 @@ const notificationRoute = require('./routes/notifications');
 const messageRoute = require('./routes/messages');
 const multer = require("multer");
 const path = require("path");
+const YAML = require("yamljs")
+const swaggerUi = require("swagger-ui-express");
 
 dotenv.config();
 
@@ -48,6 +50,8 @@ app.post("/api/upload", upload.single("file"),(req,res)=>{
     console.log(err);
   }
 })
+
+//Routing
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts",postRoute);
@@ -55,6 +59,10 @@ app.use("/api/comments", commentRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/messages", messageRoute);
+
+//Swagger Ui
+const swaggerDocument = YAML.load('./swagger.yaml');
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(8800, () => {
   console.log("Backend server is running!");
