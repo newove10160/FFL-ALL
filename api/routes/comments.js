@@ -21,6 +21,22 @@ router.post("/", async (req, res) => {
     }
 });
 
+//Get a specified comment
+router.get('/:commentId', async (req, res) => {
+    const { commentId } = req.params;
+    try {
+        const foundComment = await Comment.findById(commentId);
+
+        if (!foundComment) {
+            res.status(404).json("Comment not exists in Database.");
+        }
+
+        res.status(200).json(foundComment);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+})
+
 //Edit a comment
 router.put("/:commentId", async (req, res) => {
     const { commentId } = req.params
@@ -74,9 +90,9 @@ router.get("/post/:postId", async (req, res) => {
         }
     }
 
-    catch(err){
+    catch (err) {
         res.status(409).json({ message: err.message });
-    }       
+    }
 })
 
 module.exports = router;
