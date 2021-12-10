@@ -17,6 +17,10 @@ const PostSchema = new mongoose.Schema(
         type: Array,
         default:[],
     },
+    tag:{
+      type: String,
+      enum: ['APPLIANCES', 'CLOTHES','FURNITURES', 'MEDICAL', 'OTHERS', 'STUDY' ],
+    }
   },
   { timestamps: true }
 );

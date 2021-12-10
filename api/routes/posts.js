@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Post = require("..//models/Post");
+const Post = require("../models/Post");
 const User = require("../models/User");
 
 //create a post
@@ -98,7 +98,7 @@ router.get("/profile/:username", async(req,res)=>{
 
 
 //Get timeline's post by page
-router.get("/timeline/:userId/page/:pageNo/size/:pageSize", async (req, res) => {
+router.get("/feeds/page/:pageNo/size/:pageSize", async (req, res) => {
     let { userId, pageNo, pageSize } = req.params;
     pageNo = parseInt(pageNo);
     pageSize = parseInt(pageSize);
@@ -143,5 +143,32 @@ router.get("/profile/:username/page/:pageNo/size/:pageSize", async(req,res)=>{
         res.status(409).json({ message: err.message });
     }
 });
+
+//Search posts by text
+router.get("/feeds/search/:searchText", async (req, res) => {
+    const { searchText } = req.params;
+    try {
+        const foundPosts = await Post.find({ desc:{$regex: searchText, $options: 'i'} })
+                                     .sort({ createdAt: 'desc' });
+        res.status(200).json(foundPosts);
+    }
+    catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+})
+
+//Search by tags
+router.get("/feeds/tag/:tagName", async (req, res) => {
+    const { tagName } = req.params;
+    try{
+        const foundPosts = await Post.find({ tag: tagName })
+                                     .sort({ createdAt: 'desc' });
+        res.status(200).json(foundPosts);
+    }
+    catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+})
+
 
 module.exports = router;
