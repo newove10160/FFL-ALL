@@ -13,20 +13,31 @@
 
 }
 
-.loginLeft,.loginRight{
+.loginLeft{
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+}
+
+.loginRight{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
 }
 .loginLogo{
-    font-size: 50px;
+    font-size: 100px;
     font-weight: 800;
-    color: indigo;
+    color: #25a08b;
 }
 
 .loginDesc{
-    font-size: 24px;
+    font-size: 80px;
+    font-weight: 500;
+    color:rgb(221, 73, 73);
 }
 .loginBox{
     height: 300px;
@@ -37,7 +48,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    opacity: 0.8;
+    /* opacity: 0.8; */
 }
 .loginInput{
     height: 50px;

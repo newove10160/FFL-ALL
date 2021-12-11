@@ -32,7 +32,7 @@ export default function Login(props) {
       <div className="loginWrapper">
         <div className="loginLeft">
           <h3 className="loginLogo">FFL</h3>
-          <span className="loginDesc">Welcome Back</span>
+          <span className="loginDesc">DONATION</span>
         </div>
         <div className="loginRight">
           <form className="loginBox" onSubmit={handleClick}>
