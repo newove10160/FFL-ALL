@@ -1,20 +1,32 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.css";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export default function Login(props) {
   const email = useRef();
   const password = useRef();
-  const { isFetching, dispatch } = useContext(AuthContext);
+  const { isFetching, dispatch, error } = useContext(AuthContext);
   const handleClick = (e) => {
     e.preventDefault();
-    loginCall(
-      { email: email.current.value, password: password.current.value },
-      dispatch
-    );
+    // if (error) {
+    //   alert("Wrong password");
+    //   console.log("error")
+    //   console.log(error)
+    // } else {
+      loginCall(
+        { email: email.current.value, password: password.current.value },
+        dispatch
+      );
+    // }
   };
+
+  useEffect(() => {
+    console.log("props.user");
+    console.log(props.user);
+  }, []);
+
   return (
     <div className="login">
       <div className="loginWrapper">
