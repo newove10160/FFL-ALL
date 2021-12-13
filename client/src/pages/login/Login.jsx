@@ -9,23 +9,26 @@ export default function Login(props) {
   const password = useRef();
   const { isFetching, dispatch, error } = useContext(AuthContext);
   const handleClick = (e) => {
-    e.preventDefault();
     // if (error) {
     //   alert("Wrong password");
     //   console.log("error")
     //   console.log(error)
     // } else {
-      loginCall(
+      e.preventDefault() ;
+      if (password.current.value !== password) {
+        alert("Passwords don't match!");  
+      }
+      
+      loginCall( 
         { email: email.current.value, password: password.current.value },
         dispatch
-      );
-    // }
+        );
   };
 
-  useEffect(() => {
-    console.log("props.user");
-    console.log(props.user);
-  }, []);
+  // useEffect(() => {
+  //   console.log("props.user");
+  //   console.log(props.user);
+  // }, []);
 
   return (
     <div className="login">

@@ -4,6 +4,7 @@ import "./register.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+
 export default function Register() {
   const username = useRef();
   const email = useRef();
@@ -16,10 +17,11 @@ export default function Register() {
       username.current.value.trim() == null ||
       username.current.value.trim() === ""
     ) {
-      username.current.setCustomValidity("Do not have space");
-      console.log("error");
+      // username.current.setCustomValidity("Do not have space");
+      alert("Do not have space") ;
     } else if (passwordAgain.current.value !== password.current.value) {
-      passwordAgain.current.setCustomValidity("Passwords don't match!");
+      // passwordAgain.current.setCustomValidity("Passwords don't match!");
+      alert("Passwords don't match!") ;
     } else {
       const user = {
         username: username.current.value,
@@ -36,6 +38,7 @@ export default function Register() {
         email.current.setCustomValidity(err.response.data.error);
       }
     }
+    
   };
   return (
     <div className="login">
