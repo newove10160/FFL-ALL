@@ -13,8 +13,9 @@ const notificationRoute = require('./routes/notifications');
 const messageRoute = require('./routes/messages');
 const multer = require("multer");
 const path = require("path");
-const YAML = require("yamljs")
+const YAML = require("yamljs");
 const swaggerUi = require("swagger-ui-express");
+
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/images", express.static(path.join(__dirname, "public/images")));
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("dev"));
+
 
 const storage = multer.diskStorage({
   destination:(req,file,cb)=>{
