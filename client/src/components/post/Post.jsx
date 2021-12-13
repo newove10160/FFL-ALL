@@ -34,6 +34,15 @@ export default function Post({post}) {
         setLike(isLiked ? like-1 : like+1)
         setIsLiked(!isLiked)
     }
+
+    const deletePost = async()=>{
+        if(currentUser._id === post.userId){
+        await axios.delete("/posts/"+post._id)
+        window.location.reload();
+        }else{
+            alert("not your post")
+        }
+    }
     return (
         <div className="post">
             <div className="postWrapper">
@@ -49,7 +58,7 @@ export default function Post({post}) {
                     <span className="postDate">{format(post.createdAt)}</span>
                     </div>
                     <div className="postTopRight">
-                    <MoreVert/>
+                    <MoreVert className="deletePost" onClick={deletePost}></MoreVert>
                     </div>
                 </div> 
                 <div className="postCenter">
