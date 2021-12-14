@@ -72,3 +72,13 @@ margin: 30px 0;
     font-size: 15px;
     border-bottom: 1px dashed gray;
 }
+
+.modal{
+    display:block;
+    margin-top: 50px;
+}
+.submitBt{
+    
+margin-top: 100px;
+
+}
