@@ -5,12 +5,17 @@ import axios from "axios";
 import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import Select from "@mui/material/Select";
+import CircularProgress from "@mui/material/CircularProgress";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+const ITEM_HEIGHT = 48;
 
 const styleModal = {
   position: "relative",
@@ -34,6 +39,9 @@ export default function Post({ post }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser } = useContext(AuthContext);
   const [value, setValue] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
@@ -51,6 +59,8 @@ export default function Post({ post }) {
     console.log("post");
     console.log(post);
     console.log(post._id);
+    console.log(post);
+    console.log(post.img);
   }, []);
 
   const likeHandler = () => {
@@ -63,8 +73,14 @@ export default function Post({ post }) {
 
   const deletePost = async () => {
     if (currentUser._id === post.userId) {
-      await axios.delete("/posts/" + post._id);
-      window.location.reload();
+      try {
+        setLoading(true);
+        await axios.delete("/posts/" + post._id);
+        setLoading(false);
+        window.location.reload();
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       alert("not your post");
     }
@@ -76,6 +92,13 @@ export default function Post({ post }) {
 
   const submitEdit = async () => {
     updatePost();
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const updatePost = async () => {
@@ -155,27 +178,36 @@ export default function Post({ post }) {
           </div>
           <div className="postTopRight">
             {openModalEdit ? modalEdit : null}
-            <Button variant="text">
-              <Select
-                // labelId="demo-simple-select-autowidth-label"
-                id="demo-simple-select-autowidth"
-                //   value={age}
-                //   onChange={handleChange}
-                autoWidth
-              >
-                <MenuItem value={21} onClick={() => checkUserPost()}>
-                  Edit
-                </MenuItem>
-                <MenuItem
-                  value={22}
-                  onClick={() => {
-                    deletePost();
-                  }}
-                >
-                  Delete
-                </MenuItem>
-              </Select>
-            </Button>
+            {loading ? <CircularProgress /> : null}
+
+            <IconButton
+              aria-label="more"
+              id="long-button"
+              aria-controls="long-menu"
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                "aria-labelledby": "long-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              PaperProps={{
+                style: {
+                  maxHeight: ITEM_HEIGHT * 4.5,
+                  width: "20ch",
+                },
+              }}
+            >
+              <MenuItem onClick={() => checkUserPost()}>Edit</MenuItem>
+              <MenuItem onClick={() => deletePost()}>Delete</MenuItem>
+            </Menu>
           </div>
         </div>
         <div className="postCenter">
@@ -185,9 +217,7 @@ export default function Post({ post }) {
         <div className="postBottom">
           <div className="postBottomLeft">
             <ThumbUp className="likeIcon" onClick={likeHandler}></ThumbUp>
-            <span className="postLikeCounter" >
-              {like} people
-            </span>
+            <span className="postLikeCounter">{like} people</span>
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">{post.comment} comment</span>
