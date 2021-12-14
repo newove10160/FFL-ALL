@@ -184,8 +184,8 @@ export default function Post({ post }) {
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
-            <ThumbUp className="likeIcon"></ThumbUp>
-            <span className="postLikeCounter" onClick={likeHandler}>
+            <ThumbUp className="likeIcon" onClick={likeHandler}></ThumbUp>
+            <span className="postLikeCounter" >
               {like} people
             </span>
           </div>
