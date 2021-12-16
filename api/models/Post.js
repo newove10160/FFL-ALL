@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-const PostSchema = new mongoose.Schema(
+const Schema = mongoose.Schema;
+
+const PostSchema = new Schema(
   {
     userId:{
         type:String,
@@ -20,6 +22,10 @@ const PostSchema = new mongoose.Schema(
     tag:{
       type: String,
       enum: ['APPLIANCES', 'CLOTHES','FURNITURES', 'MEDICAL', 'OTHERS', 'STUDY' ],
+    },
+    pin:{
+      type: Schema.Types.ObjectId,
+      ref: 'Pin' 
     }
   },
   { timestamps: true }
