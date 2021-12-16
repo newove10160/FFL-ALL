@@ -10,6 +10,7 @@ import {
 } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
+import Comments from "./pages/comment/Comments";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -25,6 +26,9 @@ function App() {
         </Route>
         <Route path="/profile/:username">
           <Profile />
+        </Route>
+        <Route path="/comments/:postid">
+          <Comments />
         </Route>
       </Switch>
     </Router>
