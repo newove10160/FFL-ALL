@@ -9,18 +9,19 @@ import axios from "axios";
 import { io } from "socket.io-client"
 
 export default function Messenger() {
-    const [conversations, setConversations] = useState([]) ;
-    const [currentChat, setCurrentChat] = useState(null) ;
-    const [messages, setMessages] = useState([]) ;
-    const [newMessage, setNewMessage] = useState("") ;
-    const [arrivalMessage, setArrivalMessage] = useState(null) ;
-    const socket = useRef() ;
-    const {user} = useContext(AuthContext) ;
-    const scrollRef = useRef() ;
+    const [conversations, setConversations] = useState([]);
+    const [currentChat, setCurrentChat] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState("");
+    const [arrivalMessage, setArrivalMessage] = useState(null);
+    const [onlineUsers, setOnlineUsers] = useState([]);
+    const socket = useRef();
+    const {user} = useContext(AuthContext);
+    const scrollRef = useRef();
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8900")
-        socket.current.on("getMessage", data => {
+        socket.current = io("ws://localhost:8900");
+        socket.current.on("getMessage", (data) => {
             setArrivalMessage({
                 sender: data.senderId,
                 text: data.text,
@@ -36,9 +37,11 @@ export default function Messenger() {
     }, [arrivalMessage, currentChat]);
 
     useEffect(() => {
-        socket.current.emit("addUser", user._id) ;
-        socket.current.on("getUsers", users => {
-            console.log(users) ;
+        socket.current.emit("addUser", user._id);
+        socket.current.on("getUsers", (users) => {
+            setOnlineUsers(
+                user.followings.filter((f) => users.some((u) => u.userId === f))
+            );
         });
     }, [user]);
 
@@ -74,7 +77,7 @@ export default function Messenger() {
         };
         
         const receiverId = currentChat.members.find(
-            member => member !== user._id
+            (member) => member !== user._id
         );
 
         socket.current.emit("sendMessage", {
@@ -127,12 +130,16 @@ export default function Messenger() {
                             onChange = {(e) => setNewMessage(e.target.value)} value={newMessage} />
                             <button className="chatSubmitButton" onClick={handleSubmit}>Send</button>
                         </div>
-                        </>): (<span className="noConversationText"> Open Conversation to Start Chat</span>) }
+                        </>) : (<span className="noConversationText"> Open Conversation to Start Chat</span>) }
                     </div>
                 </div>
                 <div className="chatOnline">
                     <div className="chatOnlineWrapper">
-                        <ChatOnline />
+                        <ChatOnline 
+                        onlineUsers = {onlineUsers} 
+                        currentId = {user._id} 
+                        setCurrentChat = {setCurrentChat} 
+                        />
                     </div>
                 </div>
             </div>

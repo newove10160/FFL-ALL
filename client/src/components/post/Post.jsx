@@ -1,4 +1,4 @@
-import { MoreVert, ThumbUp } from "@mui/icons-material"
+import { MoreVert, ThumbUp, Message } from "@mui/icons-material"
 import "./post.css"
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
@@ -34,6 +34,20 @@ export default function Post({post}) {
         setLike(isLiked ? like-1 : like+1)
         setIsLiked(!isLiked)
     }
+
+    const sendMessageHandler = async () => {
+        const newConversation = {
+            senderId: currentUser._id,
+            receiverId: post.userId ,
+        };
+            try {
+                await axios.post("/conversations", newConversation);
+                window.location.reload();
+            } catch (err) {
+                console.log(err)
+            }
+    }
+
     return (
         <div className="post">
             <div className="postWrapper">
@@ -60,6 +74,9 @@ export default function Post({post}) {
                     <div className="postBottomLeft">
                         <ThumbUp className="likeIcon" ></ThumbUp>
                         <span className="postLikeCounter" onClick = {likeHandler}>{like} people</span>
+                        <Link to="/messenger" style={{textDecoration:"none"}}>
+                        <Message className="directMessage" onClick={sendMessageHandler}></Message>
+                        </Link>
                     </div>
                     <div className="postBottomRight">
                         <span className="postCommentText">{post.comment} comment</span>
