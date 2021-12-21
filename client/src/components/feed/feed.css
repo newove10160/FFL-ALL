@@ -5,3 +5,14 @@
 .feedWrapper{
     padding: 20px;
 }
+.searchbar{
+    width: 97%;
+    height: 30px;
+    background-color: rgb(202, 196, 196);
+    border-radius: 30px;
+    display: flex ;
+    align-items: center;
+    margin: 5px;
+    margin-left: 10px;
+   
+}
