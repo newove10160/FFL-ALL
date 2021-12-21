@@ -33,12 +33,11 @@ export default function Profile() {
             </div>
             <div className="profileInfo">
                 <h4 className="profileInfoName">{user.username}</h4>
-                <span className="profileInfoDesc">{user.desc}</span>
+                <button>change name</button>
             </div>
             </div>
             <div className="profileRightBottom">
             <Feed username={username}/>
-            <Rightbar user={user}/>
             </div>
             </div>
         </div>

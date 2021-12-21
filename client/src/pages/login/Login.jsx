@@ -1,31 +1,26 @@
-import { useContext, useRef, useState, useEffect } from "react";
+import { useContext, useRef} from "react";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import "./login.css";
 import { Link } from "react-router-dom";
 
-export default function Login(props) {
+export default function Login() {
   const email = useRef();
   const password = useRef();
   const { isFetching, dispatch, error } = useContext(AuthContext);
   const handleClick = (e) => {
     e.preventDefault();
-    // if (error) {
-    //   alert("Wrong password");
-    //   console.log("error")
-    //   console.log(error)
-    // } else {
+     if (error) {
+       alert("Wrong password");
+       console.log(error)
+     } else {
       loginCall(
         { email: email.current.value, password: password.current.value },
         dispatch
       );
-    // }
+     }
   };
 
-  useEffect(() => {
-    console.log("props.user");
-    console.log(props.user);
-  }, []);
 
   return (
     <div className="login">

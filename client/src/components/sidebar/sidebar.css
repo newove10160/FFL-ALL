@@ -1,9 +1,12 @@
 .sidebar{
-    flex: 2;
+    flex: 1.5;
     height: calc(94vh);
     overflow-y: scroll;
     position: sticky;
     top: 50px;   
+}
+.searchbytags{
+    font-weight: 600;
 }
 ::-webkit-scrollbar{
     width: 10px;

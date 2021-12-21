@@ -1,4 +1,4 @@
-import { MoreVert, ThumbUp } from "@mui/icons-material";
+import { ThumbUp } from "@mui/icons-material";
 import "./post.css";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -14,6 +14,9 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import ReactMapGL, {Marker} from 'react-map-gl';
+
 
 const ITEM_HEIGHT = 48;
 
@@ -22,10 +25,21 @@ const styleModal = {
   top: "50%",
   left: "50%",
   overflow: "scroll",
-  height: "100%",
+  height: "30%",
   transform: "translate(-50%, -50%)",
   width: "50%",
-  height: 307,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
+ const styleMapModal = {
+  position: "relative",
+  top: "50%",
+  left: "50%",
+  overflow: "scroll",
+  height: "60%",
+  transform: "translate(-50%, -50%)",
+  width: "60%",
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -36,12 +50,21 @@ export default function Post({ post }) {
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
   const [openModalEdit, setOpenModalEdit] = useState(false);
+  const [openModalMap, setOpenModalMap] = useState(false);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser } = useContext(AuthContext);
   const [value, setValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [loading, setLoading] = useState(false);
+  const [newPlace, setNewPlace] = useState(null)
+  const [viewport, setViewport] = useState({
+    width: "100vw",
+    height: "100vh",
+    latitude: 13.65004 ,
+    longitude: 100.49449,
+    zoom: 16
+    });
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
@@ -61,7 +84,7 @@ export default function Post({ post }) {
     console.log(post._id);
     console.log(post);
     console.log(post.img);
-  }, []);
+  }, [post]);
 
   const likeHandler = () => {
     try {
@@ -125,6 +148,87 @@ export default function Post({ post }) {
       alert("not your post!!!");
     }
   };
+
+  const handleCloseMapModal= ()=>{
+    setOpenModalMap(false)
+  }
+
+  const updatePin = async () => {
+      if (currentUser._id === post.userId) {
+        try {
+          await axios.put("/posts/" + post._id, { lat:newPlace.lat,long:newPlace.long });
+          window.location.reload();
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        alert("not your post");
+      }
+  };
+  const handleAddClick = (e)=>{
+    if (currentUser._id === post.userId) {
+    const [longitude, latitude] = e.lngLat; 
+    setNewPlace({
+      lat:latitude,
+      long:longitude
+    })
+  }
+  }
+
+  const modalMap = (
+    <Modal
+      open={openModalMap}
+      onClose={handleCloseMapModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      
+      <Box sx={styleMapModal} className="modal">
+      <div onClick={updatePin} style={{cursor: "pointer", color: "tomato"}} >
+      <AddLocationIcon ></AddLocationIcon>
+      <span>updatePin</span>
+      </div>
+      <div className="app">
+  <ReactMapGL
+  {...viewport}
+  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
+  onViewportChange={nextViewport => setViewport(nextViewport)}
+  mapStyle="mapbox://styles/mapbox/streets-v11"
+  onDblClick = {handleAddClick} 
+  >
+
+
+  <>        
+    <Marker latitude={post.lat} longitude={post.long} offsetLeft={-20} offsetTop={-10}>
+      <AddLocationIcon style={{fontSize:viewport.zoom*2, color:"slateblue", cursor: "pointer"}}
+      />
+    </Marker>
+    </>
+    {newPlace &&
+    <>
+    <Marker
+              latitude={newPlace.lat}
+              longitude={newPlace.long}
+              offsetLeft={-20}
+              offsetTop={-10}
+            >
+              <AddLocationIcon
+                style={{
+                  fontSize: viewport.zoom*2,
+                  color: "tomato",
+                  cursor: "pointer",
+                }}
+              />
+            </Marker>
+    </>
+    }
+
+  </ReactMapGL>
+  </div>
+  
+      </Box>
+    </Modal>
+  );
 
   const modalEdit = (
     <Modal
@@ -211,13 +315,16 @@ export default function Post({ post }) {
           </div>
         </div>
         <div className="postCenter">
+          {openModalMap ? modalMap:null}
+          <button type="submit" onClick={()=>{setOpenModalMap(true)}}>Open location</button>
+          <br></br>
           <span className="postText">{post?.desc}</span>
           <img className="postImg" src={PF + post.img} alt="" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
-            <ThumbUp className="likeIcon" onClick={likeHandler}></ThumbUp>
-            <span className="postLikeCounter">{like} people</span>
+            <ThumbUp className="likeIcon" onClick={likeHandler} htmlColor={isLiked? "green":"black"}></ThumbUp>
+            <span className="postLikeCounter">{like} people </span>
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">{post.comment} comment</span>

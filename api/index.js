@@ -11,7 +11,6 @@ const commentRoute = require("./routes/comments");
 const conversationRoute = require('./routes/conversations');
 const notificationRoute = require('./routes/notifications');
 const messageRoute = require('./routes/messages');
-const pinRoute = require("./routes/pins");
 const multer = require("multer");
 const path = require("path");
 const YAML = require("yamljs");
@@ -62,7 +61,6 @@ app.use("/api/comments", commentRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/notifications", notificationRoute);
 app.use("/api/messages", messageRoute);
-app.use("/api/pins",pinRoute);
 
 //Swagger Ui
 const swaggerDocument = YAML.load('./swagger.yaml');

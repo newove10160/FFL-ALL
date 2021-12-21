@@ -8,6 +8,7 @@ const PostSchema = new Schema(
         type:String,
         required: true,
     },
+    
     desc:{
         type:String,
         max:500,
@@ -23,10 +24,14 @@ const PostSchema = new Schema(
       type: String,
       enum: ['APPLIANCES', 'CLOTHES','FURNITURES', 'MEDICAL', 'OTHERS', 'STUDY' ],
     },
-    pin:{
-      type: Schema.Types.ObjectId,
-      ref: 'Pin' 
-    }
+    long:{
+      type: Number,
+      default: 0
+    },
+    lat:{
+      type: Number,
+      default: 0
+    },
   },
   { timestamps: true }
 );
