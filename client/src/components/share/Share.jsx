@@ -42,9 +42,6 @@ export default function Share() {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const desc = useRef();
     const [file, setFile] = useState(null);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const desc = useRef();
-  const [file, setFile] = useState(null);
   const [openModalMap, setOpenModalMap] = useState(false);
   const [openModalTags, setOpenModalTags] = useState(false);
   

@@ -4,13 +4,7 @@ import { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import {format} from "timeago.js"
 import { Link } from "react-router-dom"
-import { AuthContext } from "../../context/AuthContext"
-import { ThumbUp } from "@mui/icons-material";
 import "./post.css";
-import { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import { format } from "timeago.js";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import CircularProgress from "@mui/material/CircularProgress";
 import MenuItem from "@mui/material/MenuItem";
@@ -268,26 +262,37 @@ export default function Post({ post }) {
     </Modal>
   );
 
-  return (
-    <div className="post">
-      <div className="postWrapper">
-        <div className="postTop">
-          <div className="postTopLeft">
-            <Link to={`profile/${user.username}`}>
-              <img
-                className="postProfileImg"
-                src={
-                  user.profilePicture
-                    ? PF + user.profilePicture
-                    : PF + "CMYK.png"
-                }
-                alt=""
-              />
-            </Link>
-            <span className="postUserName">{user.username}</span>
-            <span className="postDate">{format(post.createdAt)}</span>
-          </div>
-          <div className="postTopRight">
+  const sendMessageHandler = async () => {
+    const newConversation = {
+        senderId: currentUser._id,
+        receiverId: post.userId ,
+    };
+        try {
+            await axios.post("/conversations", newConversation);
+            window.location.reload();
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    
+    return (
+        <div className="post">
+            <div className="postWrapper">
+                <div className="postTop">
+                    <div className="postTopLeft">
+                        <Link to ={`profile/${user.username}`} >
+                        <img className ="postProfileImg"
+                        src={user.profilePicture? PF+user.profilePicture : PF+"CMYK.png"} alt="" />
+                        </Link>
+                    <span className="postUserName">
+                        {user.username}
+                    </span>
+                    <span className="postDate">{format(post.createdAt)}</span>
+                    </div>
+                    <div className="postTopRight">
+                    <Link to="/messenger" style={{textDecoration:"none"}}>
+                        <Message className="directMessage" onClick={sendMessageHandler}></Message>
+                        </Link>
             {openModalEdit ? modalEdit : null}
             {loading ? <CircularProgress /> : null}
 
@@ -320,73 +325,25 @@ export default function Post({ post }) {
               <MenuItem onClick={() => deletePost()}>Delete</MenuItem>
             </Menu>
           </div>
-
-    const sendMessageHandler = async () => {
-        const newConversation = {
-            senderId: currentUser._id,
-            receiverId: post.userId ,
-        };
-            try {
-                await axios.post("/conversations", newConversation);
-                window.location.reload();
-            } catch (err) {
-                console.log(err)
-            }
-    }
-
-    return (
-        <div className="post">
-            <div className="postWrapper">
-                <div className="postTop">
-                    <div className="postTopLeft">
-                        <Link to ={`profile/${user.username}`} >
-                        <img className ="postProfileImg"
-                        src={user.profilePicture? PF+user.profilePicture : PF+"CMYK.png"} alt="" />
-                        </Link>
-                    <span className="postUserName">
-                        {user.username}
-                    </span>
-                    <span className="postDate">{format(post.createdAt)}</span>
-                    </div>
-                    <div className="postTopRight">
-                    <MoreVert/>
-                    </div>
                 </div> 
                 <div className="postCenter">
+                    {openModalMap ? modalMap:null}
+                    <button type="submit" onClick={()=>{setOpenModalMap(true)}}>Open location</button>
+                    <br></br>
                     <span className="postText">{post?.desc}</span>
                     <img className="postImg"src={PF+post.img} alt="" />
                 </div>
                 <div className="postBottom">
                     <div className="postBottomLeft">
-                        <ThumbUp className="likeIcon" ></ThumbUp>
+                        <ThumbUp className="likeIcon"  onClick={likeHandler} htmlColor={isLiked? "green":"black"}></ThumbUp>
                         <span className="postLikeCounter" onClick = {likeHandler}>{like} people</span>
-                        <Link to="/messenger" style={{textDecoration:"none"}}>
-                        <Message className="directMessage" onClick={sendMessageHandler}></Message>
-                        </Link>
                     </div>
                     <div className="postBottomRight">
+                        
                         <span className="postCommentText">{post.comment} comment</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div className="postCenter">
-          {openModalMap ? modalMap:null}
-          <button type="submit" onClick={()=>{setOpenModalMap(true)}}>Open location</button>
-          <br></br>
-          <span className="postText">{post?.desc}</span>
-          <img className="postImg" src={PF + post.img} alt="" />
-        </div>
-        <div className="postBottom">
-          <div className="postBottomLeft">
-            <ThumbUp className="likeIcon" onClick={likeHandler} htmlColor={isLiked? "green":"black"}></ThumbUp>
-            <span className="postLikeCounter">{like} people </span>
-          </div>
-          <div className="postBottomRight">
-            <span className="postCommentText">{post.comment} comment</span>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
