@@ -7,6 +7,7 @@ export default function Comments() {
     const postid = useParams();
     const [posts, setPost] = useState({});
     const [loading, setLoading] = useState(true);
+ 
     useEffect(() => {
 
         axios.get("/posts/" + postid)
@@ -17,7 +18,7 @@ export default function Comments() {
                 const fetchData = async () => {
                     setLoading(true);
                     try {
-                        axios.get("/comments/post/" + postid)
+                        axios.get(`/comments/post/` + postid)
                             .then(res => {
                                 
                             })
