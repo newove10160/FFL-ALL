@@ -13,6 +13,11 @@ const CommentSchema = new Schema({
         ref: 'User',
         required: true
     },
+    commenterName:{
+        type: String,
+        ref: 'User',
+        required: true
+    },
     desc:{
           type:String,
           max:500,
