@@ -72,7 +72,7 @@ export default function Feed({ username }) {
         }
         console.log(filterInput);
         try {
-            const resSearch = await axios.get(process.env.REACT_APP_BACKEND_URL + "posts/feeds/tag/" + filterInput);
+            const resSearch = await axios.get(process.env.REACT_APP_BACKEND_URL + "/posts/feeds/tag/" + filterInput);
             console.log("filterInput");
             console.log(filterInput);
             //   setPost(
