@@ -27,7 +27,7 @@ export default function Register() {
         password: password.current.value,
       };
       try {
-        await axios.post("/auth/register", user).then((res) => {
+        await axios.post(process.env.REACT_APP_BACKEND_URL + "/auth/register", user).then((res) => {
           console.log(res);
         });
         history.push("/login");
