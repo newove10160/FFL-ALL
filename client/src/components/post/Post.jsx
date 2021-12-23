@@ -1,8 +1,8 @@
 import { ThumbUp, Message } from "@mui/icons-material"
 import "./post.css"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, useRef } from "react"
 import axios from "axios"
-import {format} from "timeago.js"
+import { format } from "timeago.js"
 import { Link } from "react-router-dom"
 import "./post.css";
 import { AuthContext } from "../../context/AuthContext";
@@ -20,6 +20,10 @@ import ReactMapGL, {Marker} from 'react-map-gl';
 
 
 const ITEM_HEIGHT = 48;
+  const [comments, setComments] = useState([])
+  const desc = useRef();
+  const [openCommentModal, setOpenCommentModal] = useState(false);
+  const [commentStoreForDelete, setCommentStoreForDelete] = useState([]);
 
 const styleModal = {
   position: "relative",
@@ -107,8 +111,16 @@ export default function Post({ post }) {
       }
     } else {
       alert("not your post");
+  useEffect(() => {
+    {
+      comments.map((value, index) => {
+        return (
+          <li key={index}>
+          </li >
+      })
     }
   };
+  }, [comments])
 
   const handleCloseEditModal = () => {
     setOpenModalEdit(false);
@@ -344,6 +356,65 @@ export default function Post({ post }) {
                     </div>
                 </div>
             </div>
+  const createComment = async () => {
+    const newComment = {
+      basePost: post._id,
+      commenter: currentUser._id,
+      commenterName: currentUser.username,
+      desc: desc.current.value,
+    }
+    try {
+      let res = await axios.post("/comments", newComment)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  const deleteComment = async () => {
+    await axios.delete("/comments/" + comments._id)
+  }
+  const editComment = async () => {
+    await axios.edit("/comments/")
+    window.location.reload();
+  };
+  const handleCloseCommentModal = () => {
+    setOpenCommentModal(false);
+    setComments([]);
+  };
+  const setOpenComment = () => {
+    setOpenCommentModal(true);
+  }
+  const commentModal = (<Modal
+    open={openCommentModal}
+    onClose={handleCloseCommentModal}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+  >
+    <Box sx={style}>
+      {comments.map((value, index) => {
+        return (
+          <li key={index}>
+            {value.commenterName}: {value.desc} <Button variant="text" onClick={deleteComment}>Delete</Button>
+            <p key={index}>{console.log(value._id)}</p>
+          </li>
+        )
+      })}
+      <Button variant="text" onClick={() => getAllComment()}>Text</Button>
+    </Box>
+  </Modal>);
+  const getAllComment = async () => {
+    try {
+      let res = await axios.get("/comments/post/" + post._id)
+      console.log("resComment")
+      console.log(res.data)
+      setComments(res.data);
+    } catch (err) {
+      console.log(err)
+    }
+  };
+      {openCommentModal ? commentModal : null}
         </div>
   );
+            <input type="text" id="comment" ref={desc} />
+            <input type="submit" onClick={() => createComment()} />
+            <span className="postCommentText" onClick={() => setOpenComment()}>{post.comment} comment</span>
 }

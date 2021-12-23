@@ -42,7 +42,7 @@ router.put("/:commentId", async (req, res) => {
     const { commentId } = req.params
     const newComment = req.body;
 
-    //if (!mongoose.Types.ObjectId.isValid(commentId)) return res.status(404).send('No comment with that id.');
+    // if (!mongoose.Types.ObjectId.isValid(commentId)) return res.status(404).send('No comment with that id.');
 
     try {
         const foundUser = await User.findById(newComment.commenter);
@@ -77,8 +77,8 @@ router.delete("/:commentId", async (req, res) => {
 router.get("/post/:postId", async (req, res) => {
     const { postId } = req.params
 
-    // if (!mongoose.Types.ObjectId.isValid(postId)) 
-    //     return res.status(404).send('No post with that id.');
+    // if (!mongoose.Types.ObjectId.isValid(postId)) return res.status(404).send('No post with that id.');
+
     try {
         const foundComments = await Comment.find({ basePost: postId });
 
