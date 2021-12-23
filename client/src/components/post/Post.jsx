@@ -315,6 +315,7 @@ export default function Post({ post }) {
 
   const setOpenComment = () => {
         setOpenCommentModal(true);
+        getAllComment();
   }
     
   const commentModal = (
@@ -336,7 +337,7 @@ export default function Post({ post }) {
               </span>
             )
           })}
-          <Button variant="text" onClick={() => getAllComment()}>Text</Button>
+          {/* <Button variant="text" onClick={() => getAllComment()}>Text</Button> */}
         </Box>
       </Modal>
       );
