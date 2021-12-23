@@ -32,8 +32,8 @@ export default function Register() {
         });
         history.push("/login");
       } catch (err) {
-        console.log(err.response.data.error);
-        email.current.setCustomValidity(err.response.data.error);
+        console.log(err.message);
+        email.current.setCustomValidity(err.message);
       }
     }
   };
