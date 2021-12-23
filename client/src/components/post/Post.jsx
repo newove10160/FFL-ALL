@@ -16,14 +16,11 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import AddLocationIcon from '@mui/icons-material/AddLocation';
-import ReactMapGL, {Marker} from 'react-map-gl';
+import ReactMapGL, { Marker } from 'react-map-gl';
 
 
 const ITEM_HEIGHT = 48;
-  const [comments, setComments] = useState([])
-  const desc = useRef();
-  const [openCommentModal, setOpenCommentModal] = useState(false);
-  const [commentStoreForDelete, setCommentStoreForDelete] = useState([]);
+
 
 const styleModal = {
   position: "relative",
@@ -37,7 +34,7 @@ const styleModal = {
   boxShadow: 24,
   p: 4,
 };
- const styleMapModal = {
+const styleMapModal = {
   position: "relative",
   top: "50%",
   left: "50%",
@@ -62,14 +59,18 @@ export default function Post({ post }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState([])
+  const desc = useRef();
+  const [openCommentModal, setOpenCommentModal] = useState(false);
+  // const [commentStoreForDelete, setCommentStoreForDelete] = useState([]);
   const [newPlace, setNewPlace] = useState(null)
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",
-    latitude: 13.65004 ,
+    latitude: 13.65004,
     longitude: 100.49449,
     zoom: 16
-    });
+  });
 
   useEffect(() => {
     setIsLiked(post.likes.includes(currentUser._id));
@@ -94,7 +95,7 @@ export default function Post({ post }) {
   const likeHandler = () => {
     try {
       axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
-    } catch (err) {}
+    } catch (err) { }
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
   };
@@ -111,16 +112,19 @@ export default function Post({ post }) {
       }
     } else {
       alert("not your post");
-  useEffect(() => {
-    {
-      comments.map((value, index) => {
-        return (
-          <li key={index}>
-          </li >
-      })
     }
-  };
-  }, [comments])
+  }
+
+  //   useEffect(() => {
+  //     {
+  //       comments.map((value, index) => {
+  //         return (
+  //           <li key={index}>
+  //           </li >
+  //     })
+  //     }
+  //   };
+  // }, [comments])
 
   const handleCloseEditModal = () => {
     setOpenModalEdit(false);
@@ -162,30 +166,30 @@ export default function Post({ post }) {
     }
   };
 
-  const handleCloseMapModal= ()=>{
+  const handleCloseMapModal = () => {
     setOpenModalMap(false)
   }
 
   const updatePin = async () => {
-      if (currentUser._id === post.userId) {
-        try {
-          await axios.put("/posts/" + post._id, { lat:newPlace.lat,long:newPlace.long });
-          window.location.reload();
-        } catch (err) {
-          console.log(err);
-        }
-      } else {
-        alert("not your post");
-      }
-  };
-  const handleAddClick = (e)=>{
     if (currentUser._id === post.userId) {
-    const [longitude, latitude] = e.lngLat; 
-    setNewPlace({
-      lat:latitude,
-      long:longitude
-    })
-  }
+      try {
+        await axios.put("/posts/" + post._id, { lat: newPlace.lat, long: newPlace.long });
+        window.location.reload();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      alert("not your post");
+    }
+  };
+  const handleAddClick = (e) => {
+    if (currentUser._id === post.userId) {
+      const [longitude, latitude] = e.lngLat;
+      setNewPlace({
+        lat: latitude,
+        long: longitude
+      })
+    }
   }
 
   const modalMap = (
@@ -195,50 +199,45 @@ export default function Post({ post }) {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      
       <Box sx={styleMapModal} className="modal">
-      <div onClick={updatePin} style={{cursor: "pointer", color: "tomato"}} >
-      <AddLocationIcon ></AddLocationIcon>
-      <span>updatePin</span>
-      </div>
-      <div className="app">
-  <ReactMapGL
-  {...viewport}
-  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
-  onViewportChange={nextViewport => setViewport(nextViewport)}
-  mapStyle="mapbox://styles/mapbox/streets-v11"
-  onDblClick = {handleAddClick} 
-  >
-
-
-  <>        
-    <Marker latitude={post.lat} longitude={post.long} offsetLeft={-20} offsetTop={-10}>
-      <AddLocationIcon style={{fontSize:viewport.zoom*2, color:"slateblue", cursor: "pointer"}}
-      />
-    </Marker>
-    </>
-    {newPlace &&
-    <>
-    <Marker
-              latitude={newPlace.lat}
-              longitude={newPlace.long}
-              offsetLeft={-20}
-              offsetTop={-10}
-            >
-              <AddLocationIcon
-                style={{
-                  fontSize: viewport.zoom*2,
-                  color: "tomato",
-                  cursor: "pointer",
-                }}
-              />
-            </Marker>
-    </>
-    }
-
-  </ReactMapGL>
-  </div>
-  
+        <div onClick={updatePin} style={{ cursor: "pointer", color: "tomato" }} >
+          <AddLocationIcon ></AddLocationIcon>
+          <span>updatePin</span>
+        </div>
+        <div className="app">
+          <ReactMapGL
+            {...viewport}
+            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
+            onViewportChange={nextViewport => setViewport(nextViewport)}
+            mapStyle="mapbox://styles/mapbox/streets-v11"
+            onDblClick={handleAddClick}
+          >
+            <>
+              <Marker latitude={post.lat} longitude={post.long} offsetLeft={-20} offsetTop={-10}>
+                <AddLocationIcon style={{ fontSize: viewport.zoom * 2, color: "slateblue", cursor: "pointer" }}
+                />
+              </Marker>
+            </>
+            {newPlace &&
+              <>
+                <Marker
+                  latitude={newPlace.lat}
+                  longitude={newPlace.long}
+                  offsetLeft={-20}
+                  offsetTop={-10}
+                >
+                  <AddLocationIcon
+                    style={{
+                      fontSize: viewport.zoom * 2,
+                      color: "tomato",
+                      cursor: "pointer",
+                    }}
+                  />
+                </Marker>
+              </>
+            }
+          </ReactMapGL>
+        </div>
       </Box>
     </Modal>
   );
@@ -276,35 +275,100 @@ export default function Post({ post }) {
 
   const sendMessageHandler = async () => {
     const newConversation = {
-        senderId: currentUser._id,
-        receiverId: post.userId ,
+      senderId: currentUser._id,
+      receiverId: post.userId,
     };
-        try {
-            await axios.post("/conversations", newConversation);
-            window.location.reload();
-        } catch (err) {
-            console.log(err)
-        }
+    try {
+      await axios.post("/conversations", newConversation);
+      window.location.reload();
+    } catch (err) {
+      console.log(err)
     }
+  }
+
+  const createComment = async () => {
+    const newComment = {
+        basePost: post._id,
+      commenter: currentUser._id,
+      commenterName: currentUser.username,
+      desc: desc.current.value,
+    }
+      try {
+        let res = await axios.post("/comments", newComment)
+    } catch (err) {
+        console.log(err);
+    }
+  }
+
+  // const deleteComment = async () => {
+  //       await axios.delete("/comments/" + comments._id)
+  // }
+
+  // const editComment = async () => {
+  //       await axios.edit("/comments/")
+  //   window.location.reload();
+  // };
+  const handleCloseCommentModal = () => {
+        setOpenCommentModal(false);
+      setComments([]);
+  };
+
+  const setOpenComment = () => {
+        setOpenCommentModal(true);
+  }
     
-    return (
-        <div className="post">
-            <div className="postWrapper">
-                <div className="postTop">
-                    <div className="postTopLeft">
-                        <Link to ={`profile/${user.username}`} >
-                        <img className ="postProfileImg"
-                        src={user.profilePicture? PF+user.profilePicture : PF+"person.png"} alt="" />
-                        </Link>
-                    <span className="postUserName">
-                        {user.username}
-                    </span>
-                    <span className="postDate">{format(post.createdAt)}</span>
-                    </div>
-                    <div className="postTopRight">
-                    <Link to="/messenger" style={{textDecoration:"none"}}>
-                        <Message className="directMessage" onClick={sendMessageHandler}></Message>
-                        </Link>
+  const commentModal = (
+      <Modal
+        open={openCommentModal}
+        onClose={handleCloseCommentModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styleModal}>
+          {comments.map((value, index) => {
+            return (
+              <span key={index}>
+                Username : {value.commenterName} 
+                {/* <Button variant="text" onClick={deleteComment}>DeleteComment</Button> */}
+                <br></br> 
+                comment : {value.desc} 
+                <p key={index}>{console.log(value._id)}</p>
+              </span>
+            )
+          })}
+          <Button variant="text" onClick={() => getAllComment()}>Text</Button>
+        </Box>
+      </Modal>
+      );
+  const getAllComment = async () => {
+    try {
+        let res = await axios.get("/comments/post/" + post._id)
+      console.log("resComment")
+      console.log(res.data)
+      setComments(res.data);
+    } catch (err) {
+        console.log(err)
+      }
+  };
+
+  return (
+    <div className="post">
+      <div className="postWrapper">
+        <div className="postTop">
+          <div className="postTopLeft">
+            <Link to={`profile/${user.username}`} >
+              <img className="postProfileImg"
+                src={user.profilePicture ? PF + user.profilePicture : PF + "person.png"} alt="" />
+            </Link>
+            <span className="postUserName">
+              {user.username}
+            </span>
+            <span className="postDate">{format(post.createdAt)}</span>
+          </div>
+          <div className="postTopRight">
+            <Link to="/messenger" style={{ textDecoration: "none" }}>
+              <Message className="directMessage" onClick={sendMessageHandler}></Message>
+            </Link>
             {openModalEdit ? modalEdit : null}
             {loading ? <CircularProgress /> : null}
 
@@ -337,84 +401,27 @@ export default function Post({ post }) {
               <MenuItem onClick={() => deletePost()}>Delete</MenuItem>
             </Menu>
           </div>
-                </div> 
-                <div className="postCenter">
-                    {openModalMap ? modalMap:null}
-                    <button type="submit" onClick={()=>{setOpenModalMap(true)}}>Open location</button>
-                    <br></br>
-                    <span className="postText">{post?.desc}</span>
-                    <img className="postImg"src={PF+post.img} alt="" />
-                </div>
-                <div className="postBottom">
-                    <div className="postBottomLeft">
-                        <ThumbUp className="likeIcon"  onClick={likeHandler} htmlColor={isLiked? "green":"black"}></ThumbUp>
-                        <span className="postLikeCounter" onClick = {likeHandler}>{like} people</span>
-                    </div>
-                    <div className="postBottomRight">
-                        
-                        <span className="postCommentText">{post.comment} comment</span>
-                    </div>
-                </div>
-            </div>
-  const createComment = async () => {
-    const newComment = {
-      basePost: post._id,
-      commenter: currentUser._id,
-      commenterName: currentUser.username,
-      desc: desc.current.value,
-    }
-    try {
-      let res = await axios.post("/comments", newComment)
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  const deleteComment = async () => {
-    await axios.delete("/comments/" + comments._id)
-  }
-  const editComment = async () => {
-    await axios.edit("/comments/")
-    window.location.reload();
-  };
-  const handleCloseCommentModal = () => {
-    setOpenCommentModal(false);
-    setComments([]);
-  };
-  const setOpenComment = () => {
-    setOpenCommentModal(true);
-  }
-  const commentModal = (<Modal
-    open={openCommentModal}
-    onClose={handleCloseCommentModal}
-    aria-labelledby="modal-modal-title"
-    aria-describedby="modal-modal-description"
-  >
-    <Box sx={style}>
-      {comments.map((value, index) => {
-        return (
-          <li key={index}>
-            {value.commenterName}: {value.desc} <Button variant="text" onClick={deleteComment}>Delete</Button>
-            <p key={index}>{console.log(value._id)}</p>
-          </li>
-        )
-      })}
-      <Button variant="text" onClick={() => getAllComment()}>Text</Button>
-    </Box>
-  </Modal>);
-  const getAllComment = async () => {
-    try {
-      let res = await axios.get("/comments/post/" + post._id)
-      console.log("resComment")
-      console.log(res.data)
-      setComments(res.data);
-    } catch (err) {
-      console.log(err)
-    }
-  };
-      {openCommentModal ? commentModal : null}
         </div>
-  );
+        <div className="postCenter">
+          {openModalMap ? modalMap : null}
+          <button type="submit" onClick={() => { setOpenModalMap(true) }}>Open location</button>
+          <br></br>
+          <span className="postText">{post?.desc}</span>
+          <img className="postImg" src={PF + post.img} alt="" />
+        </div>
+        <div className="postBottom">
+          <div className="postBottomLeft">
+            <ThumbUp className="likeIcon" onClick={likeHandler} htmlColor={isLiked ? "green" : "black"}></ThumbUp>
+            <span className="postLikeCounter" onClick={likeHandler}>{like} people</span>
+          </div>
+          <div className="postBottomRight">
+          {openCommentModal ? commentModal : null}
             <input type="text" id="comment" ref={desc} />
             <input type="submit" onClick={() => createComment()} />
             <span className="postCommentText" onClick={() => setOpenComment()}>{post.comment} comment</span>
+          </div>
+        </div>
+      </div>
+      </div>
+  )
 }
