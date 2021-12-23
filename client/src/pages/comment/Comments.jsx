@@ -10,7 +10,7 @@ export default function Comments() {
  
     useEffect(() => {
 
-        axios.get("/posts/" + postid)
+        axios.get(process.env.REACT_APP_BACKEND_URL + "/posts/" + postid)
             .then(res => {
                 setPost(res.data);
             })
@@ -18,7 +18,7 @@ export default function Comments() {
                 const fetchData = async () => {
                     setLoading(true);
                     try {
-                        axios.get(`/comments/post/` + postid)
+                        axios.get(process.env.REACT_APP_BACKEND_URL + `/comments/post/` + postid)
                             .then(res => {
                                 
                             })

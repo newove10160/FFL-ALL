@@ -78,7 +78,7 @@ export default function Post({ post }) {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`/users?userId=${post.userId}`);
+      const res = await axios.get(process.env.REACT_APP_BACKEND_URL + `/users?userId=${post.userId}`);
       setUser(res.data);
     };
     fetchUser();
@@ -94,7 +94,7 @@ export default function Post({ post }) {
 
   const likeHandler = () => {
     try {
-      axios.put("/posts/" + post._id + "/like", { userId: currentUser._id });
+      axios.put(process.env.REACT_APP_BACKEND_URL + "/posts/" + post._id + "/like", { userId: currentUser._id });
     } catch (err) { }
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
@@ -104,7 +104,7 @@ export default function Post({ post }) {
     if (currentUser._id === post.userId) {
       try {
         setLoading(true);
-        await axios.delete("/posts/" + post._id);
+        await axios.delete(process.env.REACT_APP_BACKEND_URL + "/posts/" + post._id);
         setLoading(false);
         window.location.reload();
       } catch (err) {
@@ -144,7 +144,7 @@ export default function Post({ post }) {
   const updatePost = async () => {
     if (currentUser._id === post.userId) {
       try {
-        await axios.put("/posts/" + post._id, { desc: value });
+        await axios.put(process.env.REACT_APP_BACKEND_URL + "/posts/" + post._id, { desc: value });
         window.location.reload();
       } catch (err) {
         console.log(err);
@@ -173,7 +173,7 @@ export default function Post({ post }) {
   const updatePin = async () => {
     if (currentUser._id === post.userId) {
       try {
-        await axios.put("/posts/" + post._id, { lat: newPlace.lat, long: newPlace.long });
+        await axios.put(process.env.REACT_APP_BACKEND_URL + "/posts/" + post._id, { lat: newPlace.lat, long: newPlace.long });
         window.location.reload();
       } catch (err) {
         console.log(err);
@@ -279,7 +279,7 @@ export default function Post({ post }) {
       receiverId: post.userId,
     };
     try {
-      await axios.post("/conversations", newConversation);
+      await axios.post(process.env.REACT_APP_BACKEND_URL + "/conversations", newConversation);
       window.location.reload();
     } catch (err) {
       console.log(err)
@@ -294,7 +294,7 @@ export default function Post({ post }) {
       desc: desc.current.value,
     }
       try {
-        let res = await axios.post("/comments", newComment)
+        let res = await axios.post(process.env.REACT_APP_BACKEND_URL + "/comments", newComment)
     } catch (err) {
         console.log(err);
     }
@@ -342,7 +342,7 @@ export default function Post({ post }) {
       );
   const getAllComment = async () => {
     try {
-        let res = await axios.get("/comments/post/" + post._id)
+        let res = await axios.get(process.env.REACT_APP_BACKEND_URL + "/comments/post/" + post._id)
       console.log("resComment")
       console.log(res.data)
       setComments(res.data);
