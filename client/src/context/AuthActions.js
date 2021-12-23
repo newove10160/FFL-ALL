@@ -10,18 +10,3 @@ export const LoginSuccess = (user) => ({
 export const LoginFailure = () => ({
   type: "LOGIN_FAILURE",
 });
-
-export const LogOut = () =>({
-  type: "LOGOUT",
-  payload: user.LogOut,
-})
-
-export const Follow = (userId) => ({
-  type: "FOLLOW",
-  payload: userId,
-});
-
-export const Unfollow = (userId) => ({
-  type: "UNFOLLOW",
-  payload: userId,
-});

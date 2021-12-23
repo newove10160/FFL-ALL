@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Post = require("..//models/Post");
+const Post = require("../models/Post");
 const User = require("../models/User");
 
 //create a post
@@ -9,7 +9,7 @@ router.post("/", async (req, res)=>{
         const savedPost = await newPost.save();
         res.status(200).json(savedPost);
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 });
 
@@ -17,12 +17,8 @@ router.post("/", async (req, res)=>{
 router.put("/:id", async(req, res)=>{
     try{ 
     const post = await Post.findById(req.params.id);
-    if(post.userId === req.body.userId){
         await post.updateOne({$set:req.body});
         res.status(200).json("post updated")
-    }else{
-        res.status(403).json("can update only you post");
-    }
     } catch (err){
         res.status(500).json(err);
     }
@@ -32,12 +28,10 @@ router.put("/:id", async(req, res)=>{
 router.delete("/:id", async(req,res)=>{
     try{
     const post = await Post.findById(req.params.id);
-    if(post.userId === req.body.userId){
+    
         await post.deleteOne();
         res.status(200).json("post deleted")
-    }else{
-        res.status(403).json("can delete only you post");
-    }
+    
     }catch (err){
         res.status(500).json(err);
     }
@@ -55,7 +49,7 @@ router.put("/:id/like", async(req,res)=>{
         res.status(200).json("disliked");
     }
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 });
 
@@ -65,7 +59,7 @@ router.get("/:id", async(req,res)=>{
         const post = await Post.findById(req.params.id);
         res.status(200).json(post);
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 });
 
@@ -95,4 +89,82 @@ router.get("/profile/:username", async(req,res)=>{
         res.status(500).json(error);
     }
 });
+
+
+//Get timeline's post by page
+router.get("/feeds/page/:pageNo/size/:pageSize", async (req, res) => {
+    let { userId, pageNo, pageSize } = req.params;
+    pageNo = parseInt(pageNo);
+    pageSize = parseInt(pageSize);
+    if (pageNo <= 0) {
+        pageNo = 1
+    }
+    if (pageSize <= 0) {
+        pageSize = 10
+    }
+    try {
+        const foundPage = await Post.find()
+            .sort({ createdAt: 'desc' })
+            .skip(pageSize * (pageNo - 1))
+            .limit(pageSize)
+        res.status(200).json(foundPage)
+    }
+    catch (err) {
+        res.status(409).json({ message: err.message });
+    }
+})
+
+//Get user's post by page
+router.get("/profile/:username/page/:pageNo/size/:pageSize", async(req,res)=>{
+    let { username, pageNo, pageSize } = req.params;
+    pageNo = parseInt(pageNo);
+    pageSize = parseInt(pageSize);
+    if (pageNo <= 0) {
+        pageNo = 1
+    }
+    if (pageSize <= 0) {
+        pageSize = 10
+    }
+    try {
+        const user = await User.findOne({ username: username });
+        const foundPage = await Post.find({ userId: user._id })
+            .sort({ createdAt: 'desc' })
+            .skip(pageSize * (pageNo - 1))
+            .limit(pageSize)
+        res.status(200).json(foundPage)
+    }
+    catch (err) {
+        res.status(409).json({ message: err.message });
+    }
+});
+
+//Search posts by text
+router.get("/feeds/search/:searchText", async (req, res) => {
+    const { searchText } = req.params;
+    try {
+        const foundPosts = await Post.find({ desc:{$regex: searchText, $options: 'i'} })
+                                     .sort({ createdAt: 'desc' });
+        res.status(200).json(foundPosts);
+    }
+    catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+})
+
+//Search by tags
+router.get("/feeds/tag/:tagName", async (req, res) => {
+    const { tagName } = req.params;
+    try{
+        const foundPosts = await Post.find({ tag: tagName })
+                                     .sort({ createdAt: 'desc' });
+        res.status(200).json(foundPosts);
+    }
+    catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+})
+
+
+
+
 module.exports = router;
