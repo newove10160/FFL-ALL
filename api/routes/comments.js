@@ -68,9 +68,9 @@ router.delete("/:commentId", async (req, res) => {
 
     // if (!mongoose.Types.ObjectId.isValid(commentId)) return res.status(404).send('No comment with that id.');
 
-    const deletedComment = await Comment.findByIdAndDelete(commentId);
+     await Comment.findByIdAndDelete(commentId);
 
-    res.json(deletedComment);
+    res.status(200).json("deletedComment")
 })
 
 //Get comments by Post

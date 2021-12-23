@@ -62,7 +62,7 @@ export default function Post({ post }) {
   const [comments, setComments] = useState([])
   const desc = useRef();
   const [openCommentModal, setOpenCommentModal] = useState(false);
-  // const [commentStoreForDelete, setCommentStoreForDelete] = useState([]);
+  const [commentStoreForDelete, setCommentStoreForDelete] = useState([]);
   const [newPlace, setNewPlace] = useState(null)
   const [viewport, setViewport] = useState({
     width: "100vw",
@@ -288,68 +288,98 @@ export default function Post({ post }) {
 
   const createComment = async () => {
     const newComment = {
-        basePost: post._id,
+      basePost: post._id,
       commenter: currentUser._id,
       commenterName: currentUser.username,
       desc: desc.current.value,
     }
-      try {
-        let res = await axios.post(process.env.REACT_APP_BACKEND_URL + "/comments", newComment)
+    try {
+      let res = await axios.post(process.env.REACT_APP_BACKEND_URL + "/comments", newComment)
+      document.getElementById('submitComment').value = ''
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
   }
 
-  // const deleteComment = async () => {
-  //       await axios.delete("/comments/" + comments._id)
-  // }
+  const deleteComment = async (index) => {
+
+
+    try {
+      // await axios.delete(process.env.REACT_APP_BACKEND_URL + "/comments/");
+      await axios.delete(process.env.REACT_APP_BACKEND_URL + "/comments/" + comments[index]._id);
+      getAllComment();
+
+    } catch (err) {
+      console.log(err);
+    }
+
+
+    console.log("index");
+    console.log(index);
+    console.log("commentStore ")
+    console.log(comments[index]._id)
+  }
 
   // const editComment = async () => {
   //       await axios.edit("/comments/")
   //   window.location.reload();
   // };
   const handleCloseCommentModal = () => {
-        setOpenCommentModal(false);
-      setComments([]);
+    setOpenCommentModal(false);
+    setComments([]);
   };
 
   const setOpenComment = () => {
-        setOpenCommentModal(true);
-        getAllComment();
+    setOpenCommentModal(true);
+    getAllComment();
   }
-    
+  let commentStore = [];
+
   const commentModal = (
-      <Modal
-        open={openCommentModal}
-        onClose={handleCloseCommentModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={styleModal}>
-          {comments.map((value, index) => {
-            return (
-              <span key={index}>
-                Username : {value.commenterName} 
-                {/* <Button variant="text" onClick={deleteComment}>DeleteComment</Button> */}
-                <br></br> 
-                comment : {value.desc} 
-                <p key={index}>{console.log(value._id)}</p>
-              </span>
-            )
-          })}
-          {/* <Button variant="text" onClick={() => getAllComment()}>Text</Button> */}
-        </Box>
-      </Modal>
-      );
+    <Modal
+      open={openCommentModal}
+      onClose={handleCloseCommentModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={styleModal}>
+
+        {comments.map((value, index) => {
+          return (
+            <span key={index}>
+              Username : {value.commenterName}
+              <Button variant="text" onClick={() => deleteComment(index)}>DeleteComment</Button>
+              <br></br>
+              comment : {value.desc}
+              <br></br><br></br><hr></hr>
+              {/* <p key={index}>{console.log("valueId" + value._id)}</p>
+              <div>{commentStore.push(value._id)}</div>
+              <p>{console.log("a " + commentStore)}</p> */}
+            </span>
+          )
+        })}
+        {/* <Button variant="text" onClick={() => getAllComment()}>Text</Button> */}
+      </Box>
+    </Modal>
+  );
   const getAllComment = async () => {
     try {
-        let res = await axios.get(process.env.REACT_APP_BACKEND_URL + "/comments/post/" + post._id)
-      console.log("resComment")
-      console.log(res.data)
-      setComments(res.data);
+      let a = [];
+      let res = await axios.get(process.env.REACT_APP_BACKEND_URL + "/comments/post/" + post._id);
+      console.log("resComment");
+      console.log(res.data);
+      if (res.data === null) {
+        setComments([]);
+        console.log(comments);
+      } else {
+        setComments(res.data);
+        console.log(comments);
+      };
+
+      // a.push()
     } catch (err) {
-        console.log(err)
-      }
+      console.log(err);
+    }
   };
 
   return (
@@ -416,13 +446,13 @@ export default function Post({ post }) {
             <span className="postLikeCounter" onClick={likeHandler}>{like} people</span>
           </div>
           <div className="postBottomRight">
-          {openCommentModal ? commentModal : null}
-            <input type="text" id="comment" ref={desc} />
-            <input type="submit" onClick={() => createComment()} />
+            {openCommentModal ? commentModal : null}
+            <input type="text" id="submitComment" ref={desc} />
+            <input type="submit" onClick={() => createComment()} /><br></br>
             <span className="postCommentText" onClick={() => setOpenComment()}>{post.comment} comment</span>
           </div>
         </div>
       </div>
-      </div>
+    </div>
   )
 }
