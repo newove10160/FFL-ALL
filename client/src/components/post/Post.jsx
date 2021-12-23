@@ -1,4 +1,4 @@
-import { MoreVert, ThumbUp, Message } from "@mui/icons-material"
+import { ThumbUp, Message } from "@mui/icons-material"
 import "./post.css"
 import { useContext, useEffect, useState } from "react"
 import axios from "axios"
@@ -282,7 +282,7 @@ export default function Post({ post }) {
                     <div className="postTopLeft">
                         <Link to ={`profile/${user.username}`} >
                         <img className ="postProfileImg"
-                        src={user.profilePicture? PF+user.profilePicture : PF+"CMYK.png"} alt="" />
+                        src={user.profilePicture? PF+user.profilePicture : PF+"person.png"} alt="" />
                         </Link>
                     <span className="postUserName">
                         {user.username}
