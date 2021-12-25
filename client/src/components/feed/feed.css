@@ -45,6 +45,11 @@
 ::-webkit-scrollbar-thumb{
     background-color: rgb(178, 178, 178);
 }
+.reload{
+    padding-left: 30%;
+    font-weight: 600;
+    cursor: pointer;
+}
 /* .timeline{
     float: right;
     margin-right: 10px;

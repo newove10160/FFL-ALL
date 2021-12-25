@@ -37,14 +37,16 @@ export default function Topbar() {
     //       console.log(err);
     //     }
     //   };
-    
+    const reload = ()=>{
+      window.location.reload();
+    }
 
     
     return (
         <div className = "topbarContainer">
             <div className="topbarLeft">
             <Link to="/" style={{textDecoration:"none"}}>
-            <span className="logo">FFL</span>
+            <span className="logo" >FFL</span>
             <AutoStories className="logoFFL"></AutoStories>
             </Link>
             </div>
